@@ -3,6 +3,7 @@ package sevdesk
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -149,6 +150,17 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 	if err != nil {
 		return InvoiceReturn{}, err
 	}
+
+	// Decode data
+	var decode2 interface{}
+
+	err = json.NewDecoder(response.Body).Decode(&decode2)
+	if err != nil {
+		return InvoiceReturn{}, err
+	}
+
+	fmt.Println(decode2)
+	fmt.Println(decode)
 
 	// Return data
 	return decode, nil
