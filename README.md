@@ -39,3 +39,6 @@ Position, err := NewPosition(Position{"45", "1", "Backups", "9", "invoiceID", "t
 // Return the invoice id
 fmt.Println(position.Objects.ID)
 ```
+
+## Help
+If you have any questions or comments, please contact us by e-mail at [info@hilfebeiderwebsite.de](mailto:info@hilfebeiderwebsite.de)
