@@ -1,12 +1,13 @@
 package sevdesk
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
+// The data that the function uses
 type Invoice struct {
 	InvoiceNumber string
 	ContactID     string
@@ -17,6 +18,7 @@ type Invoice struct {
 	Token         string
 }
 
+// For returning the data
 type InvoiceReturn struct {
 	Objects InvoiceObjects `json:"objects"`
 }
@@ -86,49 +88,46 @@ type InvoiceObjects struct {
 	SendType                            string     `json:"sendType"`
 	DeliveryDateUntil                   string     `json:"deliveryDateUntil"`
 	SendPaymentReceivedNotificationDate string     `json:"sendPaymentReceivedNotificationDate"`
-	SumDiscountNet                      int        `json:"sumDiscountNet"`
-	SumDiscountGross                    int        `json:"sumDiscountGross"`
-	SumDiscountNetForeignCurrency       int        `json:"sumDiscountNetForeignCurrency"`
-	SumDiscountGrossForeignCurrency     int        `json:"sumDiscountGrossForeignCurrency"`
+	SumDiscountNet                      string     `json:"sumDiscountNet"`
+	SumDiscountGross                    string     `json:"sumDiscountGross"`
+	SumDiscountNetForeignCurrency       string     `json:"sumDiscountNetForeignCurrency"`
+	SumDiscountGrossForeignCurrency     string     `json:"sumDiscountGrossForeignCurrency"`
 }
 
+// Uses for invoices and positions
 type ObjectName struct {
 	Id         string `json:"id"`
 	ObjectName string `json:"objectName"`
 }
 
-// Create a new
+// Create a new invoice
 func NewInvoice(config Invoice) (InvoiceReturn, error) {
 
 	// Define client
 	client := &http.Client{}
 
-	// Define the buddy
-	body, err := json.Marshal(map[string]string{
-		"invoiceNumber":             config.InvoiceNumber,
-		"contact[id]":               config.ContactID,
-		"contact[objectName]":       "Contact",
-		"invoiceDate":               config.InvoiceDate,
-		"header":                    "",
-		"status":                    config.Status,
-		"invoiceType":               config.InvoiceType,
-		"currency":                  "EUR",
-		"mapAll":                    "true",
-		"objectName":                "Invoice",
-		"discount":                  "false",
-		"contactPerson[id]":         config.ContactPerson,
-		"contactPerson[objectName]": "SevUser",
-		"taxType":                   "default",
-		"taxRate":                   "0",
-		"taxText":                   "0",
-		"showNet":                   "false",
-	})
-	if err != nil {
-		return InvoiceReturn{}, err
-	}
+	// Define body data
+	body := url.Values{}
+	body.Set("invoiceNumber", config.InvoiceNumber)
+	body.Set("contact[id]", config.ContactID)
+	body.Set("contact[objectName]", "Contact")
+	body.Set("invoiceDate", config.InvoiceDate)
+	body.Set("header", "")
+	body.Set("status", config.Status)
+	body.Set("invoiceType", config.InvoiceType)
+	body.Set("currency", "EUR")
+	body.Set("mapAll", "true")
+	body.Set("objectName", "Invoice")
+	body.Set("discount", "false")
+	body.Set("contactPerson[id]", config.ContactPerson)
+	body.Set("contactPerson[objectName]", "SevUser")
+	body.Set("taxType", "default")
+	body.Set("taxRate", "0")
+	body.Set("taxText", "0")
+	body.Set("showNet", "false")
 
 	// New http request
-	request, err := http.NewRequest("POST", "https://my.sevdesk.de/api/v1/Invoice", bytes.NewBuffer(body))
+	request, err := http.NewRequest("POST", "https://my.sevdesk.de/api/v1/Invoice", strings.NewReader(body.Encode()))
 	if err != nil {
 		return InvoiceReturn{}, err
 	}
@@ -150,17 +149,6 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 	if err != nil {
 		return InvoiceReturn{}, err
 	}
-
-	// Decode data
-	var decode2 interface{}
-
-	err = json.NewDecoder(response.Body).Decode(&decode2)
-	if err != nil {
-		return InvoiceReturn{}, err
-	}
-
-	fmt.Println(decode2)
-	fmt.Println(decode)
 
 	// Return data
 	return decode, nil

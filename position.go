@@ -1,5 +1,21 @@
 package sevdesk
 
+import (
+	"encoding/json"
+	"net/http"
+	"net/url"
+	"strings"
+)
+
+type Position struct {
+	Price     string
+	Quantity  string
+	Name      string
+	UnityID   string
+	InvoiceID string
+	Token     string
+}
+
 type PositionReturn struct {
 	Objects PositionObjects `json:"objects"`
 }
@@ -109,4 +125,55 @@ type InvoicePositionObjects struct {
 	SumDiscountGross                    int        `json:"sumDiscountGross"`
 	SumDiscountNetForeignCurrency       int        `json:"sumDiscountNetForeignCurrency"`
 	SumDiscountGrossForeignCurrency     int        `json:"sumDiscountGrossForeignCurrency"`
+}
+
+// To create new
+func NewPosition(config Position) (PositionReturn, error) {
+
+	// Define client
+	client := &http.Client{}
+
+	// Define body data
+	body := url.Values{}
+	body.Set("price", config.Price)
+	body.Set("quantity", config.Quantity)
+	body.Set("taxRate", "")
+	body.Set("name", config.Name)
+	body.Set("unity[id]", config.UnityID)
+	body.Set("unity[objectName]", "Unity")
+	body.Set("objectName", "InvoicePos")
+	body.Set("mapAll", "true")
+	body.Set("invoice[id]", config.InvoiceID)
+	body.Set("invoice[objectName]", "Invoice")
+
+	// Define request
+	request, err := http.NewRequest("POST", "https://my.sevdesk.de/api/v1/InvoicePos", strings.NewReader(body.Encode()))
+	if err != nil {
+		return PositionReturn{}, err
+	}
+
+	// Set header
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("Authorization", config.Token)
+
+	// Response to sevdesk
+	response, err := client.Do(request)
+	if err != nil {
+		return PositionReturn{}, err
+	}
+
+	// Close connection
+	defer response.Body.Close()
+
+	// Decode data
+	var decode PositionReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return PositionReturn{}, err
+	}
+
+	// Return data
+	return decode, nil
+
 }
