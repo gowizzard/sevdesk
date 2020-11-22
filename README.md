@@ -4,7 +4,7 @@ With this small library we want to simplify the handling of the sevDesk Api. Cur
 ## Install
 
 ```console
-go get gothic.com/jojojojonas/sevdesk
+go get github.com/jojojojonas/sevdesk
 ```
 
 ## How to use?
