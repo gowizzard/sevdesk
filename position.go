@@ -1,21 +1,23 @@
 package sevdesk
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
 type Position struct {
-	PriceNet  float64
-	Quantity  string
-	TaxRate   float64
-	Name      string
-	UnityID   string
-	InvoiceID string
-	Token     string
+	PriceNet    float64
+	Quantity    string
+	TaxRate     int
+	Name        string
+	Description string
+	UnityID     string
+	InvoiceID   string
+	Token       string
 }
 
 type PositionReturn struct {
@@ -133,7 +135,7 @@ type InvoicePositionObjects struct {
 func NewPosition(config Position) (PositionReturn, error) {
 
 	// Calc to gross
-	gross := config.PriceNet+(config.PriceNet*config.TaxRate/100)
+	gross := config.PriceNet + (config.PriceNet * float64(config.TaxRate) / 100)
 
 	// Define client
 	client := &http.Client{}
@@ -142,8 +144,9 @@ func NewPosition(config Position) (PositionReturn, error) {
 	body := url.Values{}
 	body.Set("price", fmt.Sprintf("%.2f", gross))
 	body.Set("quantity", config.Quantity)
-	body.Set("taxRate", fmt.Sprintf("%.0f", config.TaxRate))
+	body.Set("taxRate", strconv.Itoa(config.TaxRate))
 	body.Set("name", config.Name)
+	body.Set("text", config.Description)
 	body.Set("unity[id]", config.UnityID)
 	body.Set("unity[objectName]", "Unity")
 	body.Set("objectName", "InvoicePos")
