@@ -15,7 +15,6 @@ type Invoice struct {
 	Status        string
 	InvoiceType   string
 	ContactPerson string
-	TaxRate       string
 	Token         string
 }
 
@@ -123,7 +122,7 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 	body.Set("contactPerson[id]", config.ContactPerson)
 	body.Set("contactPerson[objectName]", "SevUser")
 	body.Set("taxType", "default")
-	body.Set("taxRate", config.TaxRate)
+	body.Set("taxRate", "")
 	body.Set("taxText", "0")
 	body.Set("showNet", "false")
 

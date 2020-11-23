@@ -10,6 +10,7 @@ import (
 type Position struct {
 	Price     string
 	Quantity  string
+	TaxRate   string
 	Name      string
 	UnityID   string
 	InvoiceID string
@@ -137,7 +138,7 @@ func NewPosition(config Position) (PositionReturn, error) {
 	body := url.Values{}
 	body.Set("price", config.Price)
 	body.Set("quantity", config.Quantity)
-	body.Set("taxRate", "")
+	body.Set("taxRate", config.TaxRate)
 	body.Set("name", config.Name)
 	body.Set("unity[id]", config.UnityID)
 	body.Set("unity[objectName]", "Unity")
