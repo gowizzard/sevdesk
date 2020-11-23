@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
 type Position struct {
-	Price     string
+	PriceNet  int
 	Quantity  string
-	TaxRate   string
+	TaxRate   int
 	Name      string
 	UnityID   string
 	InvoiceID string
@@ -136,9 +137,9 @@ func NewPosition(config Position) (PositionReturn, error) {
 
 	// Define body data
 	body := url.Values{}
-	body.Set("price", config.Price)
+	body.Set("price", strconv.Itoa(config.PriceNet+(config.PriceNet*config.TaxRate/100)))
 	body.Set("quantity", config.Quantity)
-	body.Set("taxRate", config.TaxRate)
+	body.Set("taxRate", strconv.Itoa(config.TaxRate))
 	body.Set("name", config.Name)
 	body.Set("unity[id]", config.UnityID)
 	body.Set("unity[objectName]", "Unity")
