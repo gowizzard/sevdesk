@@ -10,7 +10,6 @@ import (
 
 // The data that the function uses
 type Invoice struct {
-	InvoiceNumber int
 	ContactID     int
 	InvoiceDate   string
 	Status        int
@@ -109,7 +108,7 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 
 	// Define body data
 	body := url.Values{}
-	body.Set("invoiceNumber", strconv.Itoa(config.InvoiceNumber))
+	body.Set("invoiceNumber", "")
 	body.Set("contact[id]", strconv.Itoa(config.ContactID))
 	body.Set("contact[objectName]", "Contact")
 	body.Set("invoiceDate", config.InvoiceDate)
