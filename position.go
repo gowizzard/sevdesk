@@ -10,13 +10,13 @@ import (
 )
 
 type Position struct {
-	PriceNet    float64
-	Quantity    float64
-	TaxRate     int
+	PriceNet    string
+	Quantity    string
+	TaxRate     string
 	Name        string
 	Description string
-	UnityID     int
-	InvoiceID   int
+	UnityID     string
+	InvoiceID   string
 	Token       string
 }
 
@@ -134,24 +134,36 @@ type InvoicePositionObjects struct {
 // To create new
 func NewPosition(config Position) (PositionReturn, error) {
 
-	// Calc to gross
-	gross := config.PriceNet + (config.PriceNet * float64(config.TaxRate) / 100)
+	// Convert string to float64
+	priceNet, err := strconv.ParseFloat(config.PriceNet, 64)
+	if err != nil {
+		return PositionReturn{}, err
+	}
+
+	// Convert taxRate from string to float64
+	taxRate, err := strconv.ParseFloat(config.TaxRate, 64)
+	if err != nil {
+		return PositionReturn{}, err
+	}
+
+	// Calc gross
+	priceGross := priceNet + (priceNet * taxRate / 100)
 
 	// Define client
 	client := &http.Client{}
 
 	// Define body data
 	body := url.Values{}
-	body.Set("price", fmt.Sprintf("%.2f", gross))
-	body.Set("quantity", fmt.Sprintf("%.2f", config.Quantity))
-	body.Set("taxRate", strconv.Itoa(config.TaxRate))
+	body.Set("price", fmt.Sprintf("%.2f", priceGross))
+	body.Set("quantity", config.Quantity)
+	body.Set("taxRate", config.TaxRate)
 	body.Set("name", config.Name)
 	body.Set("text", config.Description)
-	body.Set("unity[id]", strconv.Itoa(config.UnityID))
+	body.Set("unity[id]", config.UnityID)
 	body.Set("unity[objectName]", "Unity")
 	body.Set("objectName", "InvoicePos")
 	body.Set("mapAll", "true")
-	body.Set("invoice[id]", strconv.Itoa(config.InvoiceID))
+	body.Set("invoice[id]", config.InvoiceID)
 	body.Set("invoice[objectName]", "Invoice")
 
 	// Define request
