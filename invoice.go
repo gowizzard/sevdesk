@@ -4,17 +4,18 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
 // The data that the function uses
 type Invoice struct {
-	InvoiceNumber string
-	ContactID     string
+	InvoiceNumber int
+	ContactID     int
 	InvoiceDate   string
-	Status        string
+	Status        int
 	InvoiceType   string
-	ContactPerson string
+	ContactPerson int
 	Token         string
 }
 
@@ -108,18 +109,18 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 
 	// Define body data
 	body := url.Values{}
-	body.Set("invoiceNumber", config.InvoiceNumber)
-	body.Set("contact[id]", config.ContactID)
+	body.Set("invoiceNumber", strconv.Itoa(config.InvoiceNumber))
+	body.Set("contact[id]", strconv.Itoa(config.ContactID))
 	body.Set("contact[objectName]", "Contact")
 	body.Set("invoiceDate", config.InvoiceDate)
 	body.Set("header", "")
-	body.Set("status", config.Status)
+	body.Set("status", strconv.Itoa(config.Status))
 	body.Set("invoiceType", config.InvoiceType)
 	body.Set("currency", "EUR")
 	body.Set("mapAll", "true")
 	body.Set("objectName", "Invoice")
 	body.Set("discount", "false")
-	body.Set("contactPerson[id]", config.ContactPerson)
+	body.Set("contactPerson[id]", strconv.Itoa(config.ContactPerson))
 	body.Set("contactPerson[objectName]", "SevUser")
 	body.Set("taxType", "default")
 	body.Set("taxRate", "")

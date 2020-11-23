@@ -11,12 +11,12 @@ import (
 
 type Position struct {
 	PriceNet    float64
-	Quantity    string
+	Quantity    float64
 	TaxRate     int
 	Name        string
 	Description string
-	UnityID     string
-	InvoiceID   string
+	UnityID     int
+	InvoiceID   int
 	Token       string
 }
 
@@ -143,15 +143,15 @@ func NewPosition(config Position) (PositionReturn, error) {
 	// Define body data
 	body := url.Values{}
 	body.Set("price", fmt.Sprintf("%.2f", gross))
-	body.Set("quantity", config.Quantity)
+	body.Set("quantity", fmt.Sprintf("%.2f", config.Quantity))
 	body.Set("taxRate", strconv.Itoa(config.TaxRate))
 	body.Set("name", config.Name)
 	body.Set("text", config.Description)
-	body.Set("unity[id]", config.UnityID)
+	body.Set("unity[id]", strconv.Itoa(config.UnityID))
 	body.Set("unity[objectName]", "Unity")
 	body.Set("objectName", "InvoicePos")
 	body.Set("mapAll", "true")
-	body.Set("invoice[id]", config.InvoiceID)
+	body.Set("invoice[id]", strconv.Itoa(config.InvoiceID))
 	body.Set("invoice[objectName]", "Invoice")
 
 	// Define request

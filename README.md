@@ -14,7 +14,7 @@ You can currently only create invoices and items in the invoices. For this purpo
 Here you will find an example how to create a new invoice in sevDesk.
 
 ```go
-invoice, err := sevdesk.NewInvoice(sevdesk.Invoice{"", "clientID", "21.11.2020", "100", "RE", "contactID", "token"})
+invoice, err := sevdesk.NewInvoice(sevdesk.Invoice{, 323456, "21.11.2020", 100, "RE", 234353, "token"})
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
@@ -33,7 +33,7 @@ For this I have worked it all out as follows. The funny thing is that the ID doe
 In sevDesk the price is transferred in gross, therefore we have added a calculation of the gross value to the function. So you set the net value + the VAT in the function.
 
 ```go
-Position, err := NewPosition(Position{"45", "1", "16", "Backups", "Backups of all Websites", "9", "invoiceID", "token"})
+Position, err := NewPosition(Position{45, 1, 16, "Backups", "Backups of all Websites", 9, invoiceID, "token"})
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
