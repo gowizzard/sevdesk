@@ -107,9 +107,9 @@ type InvoicePositionObjects struct {
 	AccountEndDate                      string     `json:"accountEndDate"`
 	Address                             string     `json:"address"`
 	Currency                            string     `json:"currency"`
-	SumNet                              int        `json:"sumNet"`
-	SumTax                              int        `json:"sumTax"`
-	SumGross                            int        `json:"sumGross"`
+	SumNet                              float64    `json:"sumNet"`
+	SumTax                              float64    `json:"sumTax"`
+	SumGross                            float64    `json:"sumGross"`
 	SumDiscounts                        int        `json:"sumDiscounts"`
 	SumNetForeignCurrency               int        `json:"sumNetForeignCurrency"`
 	SumTaxForeignCurrency               int        `json:"sumTaxForeignCurrency"`
