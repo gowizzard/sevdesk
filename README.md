@@ -4,7 +4,7 @@ With this small library we want to simplify the handling of the sevDesk Api. Cur
 ## Install
 
 ```console
-go get github.com/jojojojonas/sevdesk
+go get github.com/jojojojonas/sevdesk-api
 ```
 
 ## How to use?
