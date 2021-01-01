@@ -137,6 +137,9 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 
 	// Response to sevDesk
 	response, err := client.Do(request)
+	if err != nil {
+		return InvoiceReturn{}, err
+	}
 
 	// Close response
 	defer response.Body.Close()
