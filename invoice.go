@@ -80,7 +80,7 @@ type InvoiceObjects struct {
 	SumNetAccounting                    string     `json:"sumNetAccounting"`
 	SumTaxAccounting                    string     `json:"sumTaxAccounting"`
 	SumGrossAccounting                  string     `json:"sumGrossAccounting"`
-	PaidAmount                          string     `json:"paidAmount"`
+	PaidAmount                          int        `json:"paidAmount"`
 	CustomerInternalNote                string     `json:"customerInternalNote"`
 	ShowNet                             string     `json:"showNet"`
 	Enshrined                           string     `json:"enshrined"`
