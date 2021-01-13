@@ -17,8 +17,13 @@ type Invoice struct {
 	Token         string
 }
 
+// To return the data from invoices
+type InvoicesReturn struct {
+	Objects []InvoiceObjects `json:"objects"`
+}
+
 // For returning the data
-type InvoiceReturn struct {
+type NewInvoiceReturn struct {
 	Objects InvoiceObjects `json:"objects"`
 }
 
@@ -80,7 +85,7 @@ type InvoiceObjects struct {
 	SumNetAccounting                    string     `json:"sumNetAccounting"`
 	SumTaxAccounting                    string     `json:"sumTaxAccounting"`
 	SumGrossAccounting                  string     `json:"sumGrossAccounting"`
-	PaidAmount                          int        `json:"paidAmount"`
+	PaidAmount                          float64    `json:"paidAmount"`
 	CustomerInternalNote                string     `json:"customerInternalNote"`
 	ShowNet                             string     `json:"showNet"`
 	Enshrined                           string     `json:"enshrined"`
@@ -99,8 +104,45 @@ type ObjectName struct {
 	ObjectName string `json:"objectName"`
 }
 
+// Check invoices
+func Invoices(token string) (InvoicesReturn, error) {
+
+	// Define client
+	client := &http.Client{}
+
+	// New http request
+	request, err := http.NewRequest("GET", "https://my.sevdesk.de/api/v1/Invoice", nil)
+	if err != nil {
+		return InvoicesReturn{}, err
+	}
+
+	// Set headers
+	request.Header.Set("Authorization", token)
+
+	// Response to sevDesk
+	response, err := client.Do(request)
+	if err != nil {
+		return InvoicesReturn{}, err
+	}
+
+	// Close response
+	defer response.Body.Close()
+
+	// Decode data
+	var decode InvoicesReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return InvoicesReturn{}, err
+	}
+
+	// Return data
+	return decode, nil
+
+}
+
 // Create a new invoice
-func NewInvoice(config Invoice) (InvoiceReturn, error) {
+func NewInvoice(config Invoice) (NewInvoiceReturn, error) {
 
 	// Define client
 	client := &http.Client{}
@@ -128,7 +170,7 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 	// New http request
 	request, err := http.NewRequest("POST", "https://my.sevdesk.de/api/v1/Invoice", strings.NewReader(body.Encode()))
 	if err != nil {
-		return InvoiceReturn{}, err
+		return NewInvoiceReturn{}, err
 	}
 
 	// Set header
@@ -138,18 +180,18 @@ func NewInvoice(config Invoice) (InvoiceReturn, error) {
 	// Response to sevDesk
 	response, err := client.Do(request)
 	if err != nil {
-		return InvoiceReturn{}, err
+		return NewInvoiceReturn{}, err
 	}
 
 	// Close response
 	defer response.Body.Close()
 
 	// Decode data
-	var decode InvoiceReturn
+	var decode NewInvoiceReturn
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
-		return InvoiceReturn{}, err
+		return NewInvoiceReturn{}, err
 	}
 
 	// Return data
