@@ -10,14 +10,26 @@ go get github.com/jojojojonas/sevdesk
 ## How to use?
 You can currently only create invoices and items in the invoices. For this purpose, sevDesk provides some parameters that are currently not well documented.
 
+### Get invoices
+It is now possible to read out the invoices. This is done in a very simple way. You use the following function with your user token and get back an object with slices.
+
+```go
+invoices, err := sevdesk.Invoices("token")
+if err != nil {
+fmt.Println("Error: ", err)
+}
+
+fmt.Println(invoices)
+```
+
 ### Create invoice
 Here you will find an example how to create a new invoice in sevDesk.
 
 ```go
 invoice, err := sevdesk.NewInvoice(sevdesk.Invoice{"323456", "21.11.2020", "100", "RE", "234353", "token"})
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
+if err != nil {
+    fmt.Println("Error: ", err)
+}
 	
 // Return the invoice id
 fmt.Println(invoice.Objects.ID)
@@ -34,9 +46,9 @@ In sevDesk the price is transferred in gross, therefore we have added a calculat
 
 ```go
 Position, err := NewPosition(Position{"45", "1", "16", "Backups", "Backups of all Websites", "9", "invoiceID", "token"})
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
+if err != nil {
+    fmt.Println("Error: ", err)
+}
 
 // Return the invoice id
 fmt.Println(position.Objects.ID)
