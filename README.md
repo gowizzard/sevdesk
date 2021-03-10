@@ -10,7 +10,7 @@ go get github.com/jojojojonas/sevdesk
 ## How to use?
 You can currently only create invoices and items in the invoices. For this purpose, sevDesk provides some parameters that are currently not well documented.
 
-### Get invoices
+## Get invoices
 It is now possible to read out the invoices. This is done in a very simple way. You use the following function with your user token and get back an object with slices.
 
 ```go
@@ -22,7 +22,7 @@ fmt.Println("Error: ", err)
 fmt.Println(invoices)
 ```
 
-### Create invoice
+## Create invoice
 Here you will find an example how to create a new invoice in sevDesk.
 
 ```go
@@ -35,7 +35,7 @@ if err != nil {
 fmt.Println(invoice.Objects.ID)
 ```
 
-### Create new position in an invoice
+## Create new position in an invoice
 Here is an example how to create a new position in an existing invoice.You need the ID of the invoice and of course the contact ID. You also need the parameter that distinguishes between pcs, hours or %.
 
 For this I have worked it all out as follows. The funny thing is that the ID does not start with 0 but with 1:
@@ -45,7 +45,7 @@ For this I have worked it all out as follows. The funny thing is that the ID doe
 In sevDesk the price is transferred in gross, therefore we have added a calculation of the gross value to the function. So you set the net value + the VAT in the function.
 
 ```go
-Position, err := NewPosition(Position{"45", "1", "16", "Backups", "Backups of all Websites", "9", "invoiceID", "token"})
+position, err := sevdesk.NewPosition(sevdesk.Position{"45", "1", "16", "Backups", "Backups of all Websites", "9", "invoiceID", "token"})
 if err != nil {
     fmt.Println("Error: ", err)
 }
@@ -54,5 +54,88 @@ if err != nil {
 fmt.Println(position.Objects.ID)
 ```
 
+## Get contacts
+
+If you want to read out all customers, then it goes as follows:
+
+```go
+contacts, err := sevdesk.Contacts("token")
+if err != nil {
+	fmt.Println("Error: ", err)
+}
+```
+
+## Set new contact
+
+If you want to set a new Contact, then this goes as follows. Some attributes are needed for this. The category[id] must be set. The best is a 3. Otherwise the other fields are free. The token must be specified of course.
+
+```go
+contact, err := sevdesk.NewContact(sevdesk.Contact{"Name", "Name2", "Surname", "Familyname", "Vat number", "Tax number", "Bank account", "Bank number", "CategoryID", "token"})
+if err != nil {
+	fmt.Println("Error: ", err)
+}
+```
+
+## Add information
+
+For each newly created contact, additional information about the contact can be added. Like an email, a phone number or a website. The CategorieID is very important. You can find it here.
+
+**The key represents what type it is (1: Private, 2: Work, 3. Fax, 4. Mobil, 5. empty, 6. Autobox, 7. Newsletter, 8. Invoice address)**
+
+### Add address
+
+If you want to add an address, this is how to do it:
+
+```go
+address, err := sevdesk.NewAddress(sevdesk.Address{"Street", "Zip", "City", "ContactID", "Token"})
+if err != nil {
+	fmt.Println("Error: ", err)
+}
+```
+ 
+### Add email
+
+If you want to add an email, then this goes as follows:
+
+```go
+email, err := sevdesk.NewEmail(sevdesk.Communication{"Key", "Value", "ContactID", "Token"})
+if err != nil {
+    fmt.Println("Error: ", err)
+}
+```
+
+### Add phone
+
+If you want to add a phone number, this is how to do it:
+
+```go
+phone, err := sevdesk.NewPhone(sevdesk.Communication{"Key", "Value", "ContactID", "Token"})
+if err != nil {
+    fmt.Println("Error: ", err)
+}
+```
+
+### Add mobile
+
+If you want to add a mobile number, this is how to do it:
+
+```go
+mobile, err := sevdesk.NewMobile(sevdesk.Communication{"Key", "Value", "ContactID", "Token"})
+if err != nil {
+    fmt.Println("Error: ", err)
+}
+```
+
+### Add website
+
+If you want to add a website, this is how to do it:
+
+```go
+website, err := sevdesk.NewWebsite(sevdesk.Communication{"Key", "Value", "ContactID", "Token"})
+if err != nil {
+    fmt.Println("Error: ", err)
+}
+```
+
 ## Help
-If you have any questions or comments, please contact us by e-mail at [info@hilfebeiderwebsite.de](mailto:info@hilfebeiderwebsite.de)
+If you have any questions or comments, please contact us by e-mail at [jonas.kwiedor@jj-ideenschmiede.de](mailto:jonas.kwiedor@jj-ideenschmiede.de)
