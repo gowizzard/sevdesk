@@ -54,6 +54,19 @@ if err != nil {
 fmt.Println(position.Objects.ID)
 ```
 
+## Send invoice via email
+So that you can send your invoices directly there is now a new function. You can adjust several parameters like email, CC, BCC, subject and a text.
+
+When using this function, an email is sent directly to the specified email address and the invoice is attached as a PDF.
+
+```go
+// Send email
+email, err := SendInvoiceEmail(InvoiceEmail{invoice.Objects.ID, "email", "subject", "text", "cc", "bcc", "token"})
+if err != nil {
+    fmt.Println(err)
+}
+```
+
 ## Get contacts
 
 If you want to read out all customers, then it goes as follows:

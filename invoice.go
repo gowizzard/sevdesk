@@ -13,12 +13,13 @@ package sevdesk
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
 )
 
-// The data that the function uses
+// Invoice for the data that the function uses
 type Invoice struct {
 	ContactID     string
 	InvoiceDate   string
@@ -28,12 +29,12 @@ type Invoice struct {
 	Token         string
 }
 
-// To return the data from invoices
+// InvoicesReturn to return the data from invoices
 type InvoicesReturn struct {
 	Objects []InvoiceObjects `json:"objects"`
 }
 
-// For returning the data
+// NewInvoiceReturn is for returning the data
 type NewInvoiceReturn struct {
 	Objects InvoiceObjects `json:"objects"`
 }
@@ -109,13 +110,114 @@ type InvoiceObjects struct {
 	SumDiscountGrossForeignCurrency     string     `json:"sumDiscountGrossForeignCurrency"`
 }
 
-// Uses for invoices and positions
 type ObjectName struct {
 	Id         string `json:"id"`
 	ObjectName string `json:"objectName"`
 }
 
-// Check invoices
+// InvoiceEmail is to send invoice by email
+type InvoiceEmail struct {
+	ID      string
+	Email   string
+	Subject string
+	Text    string
+	CC      string
+	BCC     string
+	Token   string
+}
+
+// SendInvoiceEmailReturn is to decode json data
+type SendInvoiceEmailReturn struct {
+	Objects SendInvoiceEmailObjects `json:"objects"`
+}
+
+type SendInvoiceEmailObjects struct {
+	ID                    string                 `json:"id"`
+	ObjectName            string                 `json:"objectName"`
+	AdditionalInformation interface{}            `json:"additionalInformation"`
+	Create                string                 `json:"create"`
+	Update                string                 `json:"update"`
+	Object                SendInvoiceEmailObject `json:"object"`
+	From                  string                 `json:"from"`
+	To                    string                 `json:"to"`
+	Subject               string                 `json:"subject"`
+	Text                  string                 `json:"text"`
+	sevClient             ObjectName             `json:"sevClient"`
+}
+
+type SendInvoiceEmailObject struct {
+	ID                                  string      `json:"id"`
+	ObjectName                          string      `json:"objectName"`
+	AdditionalInformation               interface{} `json:"additionalInformation"`
+	InvoiceNumber                       string      `json:"invoiceNumber"`
+	Contact                             ObjectName  `json:"contact"`
+	Create                              string      `json:"create"`
+	Update                              string      `json:"update"`
+	SevClient                           ObjectName  `json:"sevClient"`
+	InvoiceDate                         string      `json:"invoice_date"`
+	Header                              string      `json:"header"`
+	HeadText                            interface{} `json:"headText"`
+	FootText                            interface{} `json:"footText"`
+	TimeToPay                           interface{} `json:"timeToPay"`
+	DiscountTime                        interface{} `json:"discountTime"`
+	Discount                            string      `json:"discount"`
+	AddressName                         interface{} `json:"addressName"`
+	AddressStreet                       interface{} `json:"addressStreet"`
+	AddressZip                          interface{} `json:"addressZip"`
+	AddressCity                         interface{} `json:"addressCity"`
+	PayDate                             interface{} `json:"payDate"`
+	CreateUser                          ObjectName  `json:"createUser"`
+	DeliveryDate                        string      `json:"deliveryDate"`
+	Status                              string      `json:"status"`
+	SmallSettlement                     string      `json:"smallSettlement"`
+	ContactPerson                       ObjectName  `json:"contactPerson"`
+	TaxRate                             string      `json:"taxRate"`
+	TaxText                             string      `json:"taxText"`
+	DunningLevel                        interface{} `json:"dunningLevel"`
+	AddressParentName                   interface{} `json:"addressParentName"`
+	TaxType                             string      `json:"taxType"`
+	SendDate                            interface{} `json:"sendDate"`
+	OriginLastInvoice                   interface{} `json:"originLastInvoice"`
+	InvoiceType                         string      `json:"invoiceType"`
+	AccountIntervall                    interface{} `json:"accountIntervall"`
+	AccountLastInvoice                  interface{} `json:"accountLastInvoice"`
+	AccountNextInvoice                  interface{} `json:"accountNextInvoice"`
+	ReminderTotal                       interface{} `json:"reminderTotal"`
+	ReminderDebit                       interface{} `json:"reminderDebit"`
+	ReminderDeadline                    interface{} `json:"reminderDeadline"`
+	ReminderCharge                      interface{} `json:"reminderCharge"`
+	AddressParentName2                  interface{} `json:"addressParentName2"`
+	AddressName2                        interface{} `json:"addressName2"`
+	AddressGender                       interface{} `json:"addressGender"`
+	AccountStartDate                    interface{} `json:"accountStartDate"`
+	AccountEndDate                      interface{} `json:"accountEndDate"`
+	Address                             interface{} `json:"address"`
+	Currency                            string      `json:"currency"`
+	SumNet                              string      `json:"sumNet"`
+	SumTax                              string      `json:"sumTax"`
+	SumGross                            string      `json:"sumGross"`
+	SumDiscounts                        string      `json:"sumDiscounts"`
+	SumNetForeignCurrency               string      `json:"sumNetForeignCurrency"`
+	SumTaxForeignCurrency               string      `json:"sumTaxForeignCurrency"`
+	SumGrossForeignCurrency             string      `json:"sumGrossForeignCurrency"`
+	SumDiscountsForeignCurrency         string      `json:"sumDiscountsForeignCurrency"`
+	SumNetAccounting                    string      `json:"sumNetAccounting"`
+	SumTaxAccounting                    string      `json:"sumTaxAccounting"`
+	SumGrossAccounting                  string      `json:"sumGrossAccounting"`
+	PaidAmount                          string      `json:"paidAmount"`
+	CustomerInternalNote                interface{} `json:"customerInternalNote"`
+	ShowNet                             string      `json:"showNet"`
+	Enshrined                           interface{} `json:"enshrined"`
+	SendType                            string      `json:"sendType"`
+	DeliveryDateUntil                   interface{} `json:"deliveryDateUntil"`
+	SendPaymentReceivedNotificationDate interface{} `json:"sendPaymentReceivedNotificationDate"`
+	SumDiscountNet                      string      `json:"sumDiscountNet"`
+	SumDiscountGross                    string      `json:"sumDiscountGross"`
+	SumDiscountNetForeignCurrency       string      `json:"sumDiscountNetForeignCurrency"`
+	SumDiscountGrossForeignCurrency     string      `json:"sumDiscountGrossForeignCurrency"`
+}
+
+// Invoices to check invoices
 func Invoices(token string) (InvoicesReturn, error) {
 
 	// Define client
@@ -152,7 +254,7 @@ func Invoices(token string) (InvoicesReturn, error) {
 
 }
 
-// Create a new invoice
+// NewInvoice to create a new invoice
 func NewInvoice(config Invoice) (NewInvoiceReturn, error) {
 
 	// Define client
@@ -203,6 +305,54 @@ func NewInvoice(config Invoice) (NewInvoiceReturn, error) {
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
 		return NewInvoiceReturn{}, err
+	}
+
+	// Return data
+	return decode, nil
+
+}
+
+// SendInvoiceEmail to send an invoice by mail
+func SendInvoiceEmail(config InvoiceEmail) (SendInvoiceEmailReturn, error) {
+
+	// Define client
+	client := &http.Client{}
+
+	// Define body data
+	body := url.Values{}
+	body.Set("toEmail", config.Email)
+	body.Set("subject", config.Subject)
+	body.Set("text", config.Text)
+	body.Set("copy", "false")
+	body.Set("additionalAttachments", "null")
+	body.Set("ccEmail", config.CC)
+	body.Set("bccEmail", config.BCC)
+
+	// New http request
+	request, err := http.NewRequest("POST", fmt.Sprintf("https://my.sevdesk.de/api/v1/Invoice/%s/sendViaEmail", config.ID), strings.NewReader(body.Encode()))
+	if err != nil {
+		return SendInvoiceEmailReturn{}, err
+	}
+
+	// Set header
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("Authorization", config.Token)
+
+	// Response to sevDesk
+	response, err := client.Do(request)
+	if err != nil {
+		return SendInvoiceEmailReturn{}, err
+	}
+
+	// Close response
+	defer response.Body.Close()
+
+	// Decode data
+	var decode SendInvoiceEmailReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return SendInvoiceEmailReturn{}, err
 	}
 
 	// Return data
