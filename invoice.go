@@ -285,7 +285,7 @@ func NewInvoice(config Invoice) (NewInvoiceReturn, error) {
 	body.Set("taxType", "default")
 	body.Set("taxRate", "")
 	body.Set("taxText", "0")
-	body.Set("showNet", "true")
+	body.Set("showNet", "false")
 
 	// New http request
 	request, err := http.NewRequest("POST", "https://my.sevdesk.de/api/v1/Invoice", strings.NewReader(body.Encode()))
