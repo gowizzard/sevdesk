@@ -22,10 +22,14 @@ import (
 // Invoice for the data that the function uses
 type Invoice struct {
 	ContactID     string
+	Address       string
 	InvoiceDate   string
 	Status        string
 	InvoiceType   string
 	ContactPerson string
+	Subject       string
+	Headtext      string
+	FootText      string
 	Token         string
 }
 
@@ -265,9 +269,12 @@ func NewInvoice(config Invoice) (NewInvoiceReturn, error) {
 	body.Set("invoiceNumber", "")
 	body.Set("contact[id]", config.ContactID)
 	body.Set("contact[objectName]", "Contact")
+	body.Set("address", config.Address)
 	body.Set("invoiceDate", config.InvoiceDate)
-	body.Set("header", "")
+	body.Set("header", config.Subject)
 	body.Set("status", config.Status)
+	body.Set("headText", config.Headtext)
+	body.Set("footText", config.FootText)
 	body.Set("invoiceType", config.InvoiceType)
 	body.Set("currency", "EUR")
 	body.Set("mapAll", "true")
@@ -278,7 +285,7 @@ func NewInvoice(config Invoice) (NewInvoiceReturn, error) {
 	body.Set("taxType", "default")
 	body.Set("taxRate", "")
 	body.Set("taxText", "0")
-	body.Set("showNet", "false")
+	body.Set("showNet", "true")
 
 	// New http request
 	request, err := http.NewRequest("POST", "https://my.sevdesk.de/api/v1/Invoice", strings.NewReader(body.Encode()))
