@@ -61,7 +61,7 @@ When using this function, an email is sent directly to the specified email addre
 
 ```go
 // Send email
-email, err := SendInvoiceEmail(InvoiceEmail{invoice.Objects.ID, "email", "subject", "text", "cc", "bcc", "token"})
+email, err := sevdesk.SendInvoiceEmail(sevdesk.InvoiceEmail{invoice.Objects.ID, "email", "subject", "text", "cc", "bcc", "token"})
 if err != nil {
     fmt.Println(err)
 }
