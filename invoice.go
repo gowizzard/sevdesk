@@ -14,6 +14,7 @@ package sevdesk
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -221,6 +222,217 @@ type SendInvoiceEmailObject struct {
 	SumDiscountGrossForeignCurrency     string      `json:"sumDiscountGrossForeignCurrency"`
 }
 
+// SendInvoice is to config
+type SendInvoice struct {
+	ID        string
+	SendType  string
+	SendDraft string
+	Token     string
+}
+
+// SendInvoiceReturn is to decode json data
+type SendInvoiceReturn struct {
+	Objects SendInvoiceObjects `json:"objects"`
+}
+
+type SendInvoiceObjects struct {
+	ID                                  string               `json:"id"`
+	ObjectName                          string               `json:"objectName"`
+	AdditionalInformation               interface{}          `json:"additionalInformation"`
+	InvoiceNumber                       string               `json:"invoiceNumber"`
+	Contact                             ObjectName           `json:"contact"`
+	Create                              string               `json:"create"`
+	Update                              string               `json:"update"`
+	SevClient                           SendInvoiceSevClient `json:"sevClient"`
+	InvoiceDate                         string               `json:"invoiceDate"`
+	Header                              string               `json:"header"`
+	HeadText                            string               `json:"headText"`
+	FootText                            string               `json:"footText"`
+	TimeToPlay                          interface{}          `json:"timeToPlay"`
+	DiscountTime                        string               `json:"discountTime"`
+	Discount                            string               `json:"discount"`
+	AddressName                         string               `json:"addressName"`
+	AddressStreet                       interface{}          `json:"addressStreet"`
+	AddressZip                          interface{}          `json:"addressZip"`
+	AddressCity                         interface{}          `json:"addressCity"`
+	AddressCountry                      ObjectName           `json:"addressCountry"`
+	PayDate                             interface{}          `json:"payDate"`
+	CreateUser                          ObjectName           `json:"createUser"`
+	DeliveryDate                        string               `json:"deliveryDate"`
+	Status                              string               `json:"status"`
+	SmallSettlement                     string               `json:"smallSettlement"`
+	ContactPerson                       ObjectName           `json:"contactPerson"`
+	TaxRate                             string               `json:"taxRate"`
+	TaxText                             string               `json:"taxText"`
+	DunningLevel                        interface{}          `json:"dunningLevel"`
+	AddressParentName                   interface{}          `json:"addressParentName"`
+	TaxType                             string               `json:"taxType"`
+	SendDate                            string               `json:"sendDate"`
+	OriginLastInvoice                   interface{}          `json:"originLastInvoice"`
+	InvoiceType                         string               `json:"invoiceType"`
+	AccountIntervall                    interface{}          `json:"accountIntervall"`
+	AccountLastInvoice                  interface{}          `json:"accountLastInvoice"`
+	AccountNextInvoice                  interface{}          `json:"accountNextInvoice"`
+	ReminderTotal                       interface{}          `json:"reminderTotal"`
+	ReminderDebit                       interface{}          `json:"reminderDebit"`
+	ReminderDeadline                    interface{}          `json:"reminderDeadline"`
+	ReminderCharge                      interface{}          `json:"reminderCharge"`
+	AddressParentName2                  interface{}          `json:"addressParentName2"`
+	AddressName2                        interface{}          `json:"addressName2"`
+	AddressGender                       interface{}          `json:"addressGender"`
+	AccountStartDate                    interface{}          `json:"accountStartDate"`
+	AccountEndDate                      interface{}          `json:"accountEndDate"`
+	Address                             interface{}          `json:"address"`
+	Currency                            string               `json:"currency"`
+	SumNet                              string               `json:"sumNet"`
+	SumTax                              string               `json:"sumTax"`
+	SumGross                            string               `json:"sumGross"`
+	SumDiscounts                        string               `json:"sumDiscounts"`
+	SumNetForeignCurrency               string               `json:"sumNetForeignCurrency"`
+	SumTaxForeignCurrency               string               `json:"sumTaxForeignCurrency"`
+	SumGrossForeignCurrency             string               `json:"sumGrossForeignCurrency"`
+	SumDiscountsForeignCurrency         string               `json:"sumDiscountsForeignCurrency"`
+	SumNetAccounting                    string               `json:"sumNetAccounting"`
+	SumTaxAccounting                    string               `json:"sumTaxAccounting"`
+	SumGrossAccounting                  string               `json:"sumGrossAccounting"`
+	PaidAmount                          int                  `json:"paidAmount"`
+	CustomerInternalNote                interface{}          `json:"customerInternalNote"`
+	ShowNet                             string               `json:"showNet"`
+	Enshrined                           interface{}          `json:"enshrined"`
+	SendType                            string               `json:"sendType"`
+	DeliveryDateUntil                   interface{}          `json:"deliveryDateUntil"`
+	SendPaymentReceivedNotificationDate interface{}          `json:"sendPaymentReceivedNotificationDate"`
+	SumDiscountNet                      string               `json:"sumDiscountNet"`
+	SumDiscountGross                    string               `json:"sumDiscountGross"`
+	SumDiscountNetForeignCurrency       string               `json:"sumDiscountNetForeignCurrency"`
+	SumDiscountGrossForeignCurrency     string               `json:"sumDiscountGrossForeignCurrency"`
+}
+
+type SendInvoiceSevClient struct {
+	ID                        string                      `json:"id"`
+	ObjectName                string                      `json:"objectName"`
+	AdditionalInformation     interface{}                 `json:"additionalInformation"`
+	Create                    string                      `json:"create"`
+	Update                    string                      `json:"update"`
+	Name                      string                      `json:"name"`
+	TemplateMainColor         string                      `json:"templateMainColor"`
+	TemplateSubColor          string                      `json:"templateSubColor"`
+	Status                    string                      `json:"status"`
+	AddressStreet             string                      `json:"addressStreet"`
+	AddressCity               string                      `json:"addressCity"`
+	AddressZip                string                      `json:"addressZip"`
+	MuncipalityKey            interface{}                 `json:"muncipalityKey"`
+	ContactPhone              string                      `json:"contactPhone"`
+	ContactEmail              string                      `json:"contactEmail"`
+	PaypalEmail               interface{}                 `json:"paypalEmail"`
+	VatNumber                 string                      `json:"vatNumber"`
+	CeoName                   string                      `json:"ceoName"`
+	ContactFax                interface{}                 `json:"contactFax"`
+	Domain                    string                      `json:"domain"`
+	TemplateHeadlineColor     string                      `json:"templateHeadlineColor"`
+	Website                   string                      `json:"website"`
+	Bank                      string                      `json:"bank"`
+	BankNumber                string                      `json:"bankNumber"`
+	BankAccountNumber         string                      `json:"bankAccountNumber"`
+	DistrictCourt             string                      `json:"districtCourt"`
+	SmallSettlement           string                      `json:"smallSettlement"`
+	HasSeenBasicSettingsModal string                      `json:"hasSeenBasicSettingsModal"`
+	Bank2                     interface{}                 `json:"bank2"`
+	BankIban                  string                      `json:"bankIban"`
+	BankBic                   string                      `json:"bankBic"`
+	OrderPaymentTerms         interface{}                 `json:"orderPaymentTerms"`
+	OrderDeliveryTerms        interface{}                 `json:"orderDeliveryTerms"`
+	InvoiceTimeToPay          interface{}                 `json:"invoiceTimeToPay"`
+	Type                      string                      `json:"type"`
+	ForeignId                 interface{}                 `json:"foreignId"`
+	DefaultBillingTime        interface{}                 `json:"defaultBillingTime"`
+	BillingAccountNumber      interface{}                 `json:"billingAccountNumber"`
+	BillingBankCode           interface{}                 `json:"billingBankCode"`
+	CompanyRegister           string                      `json:"companyRegister"`
+	NameAddition              string                      `json:"nameDddition"`
+	ShowNet                   string                      `json:"showNet"`
+	PrintShowQr               string                      `json:"printShowQr"`
+	PrintShowPayPal           string                      `json:"printShowPayPal"`
+	PrintDeliveryDate         string                      `json:"printDeliveryDate"`
+	PrintContactPerson        string                      `json:"printContactPerson"`
+	TaxNumber                 string                      `json:"taxNumber"`
+	PrintDeliveryReturn       string                      `json:"printDeliveryReturn"`
+	PrintPartNumber           string                      `json:"printPartNumber"`
+	PrintPosDescription       string                      `json:"printPosDescription"`
+	ChartOfAccounts           string                      `json:"chartOfAccounts"`
+	AccountingChart           ObjectName                  `json:"accountingChart"`
+	AccountingSystem          SendInvoiceAccountingSystem `json:"accountingSystem"`
+	ContractNotePaymentTerms  interface{}                 `json:"contractNotePaymentTerms"`
+	ContractNoteDeliveryTerms interface{}                 `json:"contractNoteDeliveryTerms"`
+	PackingListDeliveryTerms  interface{}                 `json:"packingListDeliveryTerms"`
+	InvitedBy                 interface{}                 `json:"invitedBy"`
+	PartnerID                 string                      `json:"partnerId"`
+	InviterRewarded           string                      `json:"inviterRewarded"`
+	InvoiceReminderDuration   interface{}                 `json:"invoiceReminderDuration"`
+	InvoiceReminderCharge     interface{}                 `json:"invoiceReminderCharge"`
+	AutoDeliveryDate          string                      `json:"autoDeliveryDate"`
+	AddressCountry            SendInvoiceAddressCountry   `json:"addressCountry"`
+	PrintPdfDeliveryReturn    string                      `json:"printPdfDeliveryReturn"`
+	PrintPdfFooter            string                      `json:"printPdfFooter"`
+	DefaultCurrency           string                      `json:"defaultCurrency"`
+	PrintPageNumbers          string                      `json:"printPageNumbers"`
+	FormOfCompany             string                      `json:"formOfCompany"`
+	ComapnySize               string                      `json:"comapnySize"`
+	ReferralProgram           ObjectName                  `json:"referralProgram"`
+	onBoardingStatus          interface{}                 `json:"onBoardingStatus"`
+	PactasID                  string                      `json:"pactasId"`
+	DocServer                 string                      `json:"docServer"`
+	CreateInvoiceReminder     string                      `json:"createInvoiceReminder"`
+	AccountantNumber          string                      `json:"accountantNumber"`
+	AccountantClientNumber    string                      `json:"accountantClientNumber"`
+	AccountingYearBegin       string                      `json:"accountingYearBegin"`
+	CancelationDate           interface{}                 `json:"cancelationDate"`
+	FigoUsername              string                      `json:"figoUsername"`
+	SubscriptionStartDate     string                      `json:"subscriptionStartDate"`
+	SubscriptionEndDate       interface{}                 `json:"subscriptionEndDate"`
+	SubscriptionCycle         string                      `json:"subscriptionCycle"`
+	PrintFoldLines            string                      `json:"printFoldLines"`
+	DiscoveredAt              string                      `json:"discoveredAt"`
+	FormerBookkeepingTool     interface{}                 `json:"formerBookkeepingTool"`
+	HasAccountant             string                      `json:"hasAccountant"`
+	PartnerBrand              interface{}                 `json:"partnerBrand"`
+	PartnerCustomerID         interface{}                 `json:"partnerCustomerId"`
+	PartnerProvisioningID     interface{}                 `json:"partnerProvisioningId"`
+	PartnerWhitelabeled       string                      `json:"partnerWhitelabeled"`
+	Tenant                    string                      `json:"tenant"`
+	state                     string                      `json:"state"`
+}
+
+type SendInvoiceAccountingSystem struct {
+	ID                    string      `json:"id"`
+	ObjectName            string      `json:"objectName"`
+	AdditionalInformation interface{} `json:"additionalInformation"`
+	Create                interface{} `json:"create"`
+	Update                interface{} `json:"update"`
+	Name                  string      `json:"name"`
+	AccountingChart       ObjectName  `json:"accountingChart"`
+}
+
+type SendInvoiceAddressCountry struct {
+	ID                    string      `json:"id"`
+	ObjectName            string      `json:"objectName"`
+	AdditionalInformation interface{} `json:"additionalInformation"`
+	Code                  string      `json:"code"`
+	Name                  string      `json:"name"`
+	NameEn                string      `json:"nameEn"`
+	TranslationCode       string      `json:"translationCode"`
+	Locale                string      `json:"locale"`
+	Priority              string      `json:"priority"`
+}
+
+// DownloadInvoice is to config
+type DownloadInvoice struct {
+	ID            string
+	PreventSendBy string
+	Download      string
+	Token         string
+}
+
 // Invoices to check invoices
 func Invoices(token string) (InvoicesReturn, error) {
 
@@ -319,6 +531,49 @@ func NewInvoice(config Invoice) (NewInvoiceReturn, error) {
 
 }
 
+// SendInvoicePDF to send pdf
+func SendInvoicePDF(config SendInvoice) (SendInvoiceReturn, error) {
+
+	// Define client
+	client := &http.Client{}
+
+	// Define body data
+	body := url.Values{}
+	body.Set("sendType", config.SendType)
+	body.Set("sendDraft", config.SendDraft)
+
+	// New http request
+	request, err := http.NewRequest("PUT", fmt.Sprintf("https://my.sevdesk.de/api/v1/Invoice/%s/sendBy", config.ID), strings.NewReader(body.Encode()))
+	if err != nil {
+		return SendInvoiceReturn{}, err
+	}
+
+	// Set header
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("Authorization", config.Token)
+
+	// Response to sevDesk
+	response, err := client.Do(request)
+	if err != nil {
+		return SendInvoiceReturn{}, err
+	}
+
+	// Close response
+	defer response.Body.Close()
+
+	// Decode data
+	var decode SendInvoiceReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return SendInvoiceReturn{}, err
+	}
+
+	// Return data
+	return decode, nil
+
+}
+
 // SendInvoiceEmail to send an invoice by mail
 func SendInvoiceEmail(config InvoiceEmail) (SendInvoiceEmailReturn, error) {
 
@@ -364,5 +619,40 @@ func SendInvoiceEmail(config InvoiceEmail) (SendInvoiceEmailReturn, error) {
 
 	// Return data
 	return decode, nil
+
+}
+
+func DownloadInvoicePDF(config DownloadInvoice) (string, error) {
+
+	// Define client
+	client := &http.Client{}
+
+	// New http request
+	request, err := http.NewRequest("GET", fmt.Sprintf("https://my.sevdesk.de/api/v1/Invoice/%s/getPdf?preventSendBy=%s&download=%s", config.ID, config.PreventSendBy, config.Download), nil)
+	if err != nil {
+		return "", err
+	}
+
+	// Set header
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("Authorization", config.Token)
+
+	// Response to sevDesk
+	response, err := client.Do(request)
+	if err != nil {
+		return "", err
+	}
+
+	// Close response
+	defer response.Body.Close()
+
+	// Read body data
+	read, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+
+	// Return data
+	return string(read), nil
 
 }
