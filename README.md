@@ -78,7 +78,7 @@ fmt.Println(err)
 ```
 
 ## Downlaod invoice
-When the invoice has been marked as sent, it can be downloaded. The data will be returned in a string.
+When the invoice has been marked as sent, it can be downloaded. The data will be returned as bytes.
 
 ```go
 download, err := sevdesk.DownloadInvoicePDF(sevdesk.DownloadInvoice{invoice.Objects.ID, "true", "true", "token"})
