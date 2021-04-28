@@ -67,6 +67,26 @@ if err != nil {
 }
 ```
 
+## Send invoice for download
+In order to download an invoice, the status must first be changed to sent. You can do this with the following function.
+
+```go
+sendInvoice, err := SendInvoicePDF(SendInvoice{invoice.Objects.ID, "VPDF", "false", "token"})
+if err != nil {
+fmt.Println(err)
+}
+```
+
+## Downlaod invoice
+When the invoice has been marked as sent, it can be downloaded. The data will be returned in a string.
+
+```go
+download, err := DownloadInvoicePDF(DownloadInvoice{invoice.Objects.ID, "true", "true", "token"})
+if err != nil {
+    fmt.Println(err)
+}
+```
+
 ## Get contacts
 
 If you want to read out all customers, then it goes as follows:
