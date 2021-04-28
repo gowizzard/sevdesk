@@ -630,7 +630,7 @@ func DownloadInvoicePDF(config DownloadInvoice) ([]byte, error) {
 	// New http request
 	request, err := http.NewRequest("GET", fmt.Sprintf("https://my.sevdesk.de/api/v1/Invoice/%s/getPdf?preventSendBy=%s&download=%s", config.ID, config.PreventSendBy, config.Download), nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	// Set header
@@ -640,7 +640,7 @@ func DownloadInvoicePDF(config DownloadInvoice) ([]byte, error) {
 	// Response to sevDesk
 	response, err := client.Do(request)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	// Close response
@@ -649,7 +649,7 @@ func DownloadInvoicePDF(config DownloadInvoice) ([]byte, error) {
 	// Read body data
 	read, err := io.ReadAll(response.Body)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	// Return data
