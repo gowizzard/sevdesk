@@ -71,7 +71,7 @@ if err != nil {
 In order to download an invoice, the status must first be changed to sent. You can do this with the following function.
 
 ```go
-sendInvoice, err := SendInvoicePDF(SendInvoice{invoice.Objects.ID, "VPDF", "false", "token"})
+sendInvoice, err := sevdesk.SendInvoicePDF(sevdesk.SendInvoice{invoice.Objects.ID, "VPDF", "false", "token"})
 if err != nil {
 fmt.Println(err)
 }
@@ -81,7 +81,7 @@ fmt.Println(err)
 When the invoice has been marked as sent, it can be downloaded. The data will be returned in a string.
 
 ```go
-download, err := DownloadInvoicePDF(DownloadInvoice{invoice.Objects.ID, "true", "true", "token"})
+download, err := sevdesk.DownloadInvoicePDF(sevdesk.DownloadInvoice{invoice.Objects.ID, "true", "true", "token"})
 if err != nil {
     fmt.Println(err)
 }
