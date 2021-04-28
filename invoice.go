@@ -622,7 +622,7 @@ func SendInvoiceEmail(config InvoiceEmail) (SendInvoiceEmailReturn, error) {
 
 }
 
-func DownloadInvoicePDF(config DownloadInvoice) (string, error) {
+func DownloadInvoicePDF(config DownloadInvoice) ([]byte, error) {
 
 	// Define client
 	client := &http.Client{}
@@ -653,6 +653,6 @@ func DownloadInvoicePDF(config DownloadInvoice) (string, error) {
 	}
 
 	// Return data
-	return string(read), nil
+	return read, nil
 
 }
